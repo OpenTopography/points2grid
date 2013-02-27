@@ -1,0 +1,39 @@
+points2grid release notes
+
+Version 1.0.2: 
+
+Version 1.0.2 of Points2Grid is a minor release, adding several small
+features to the prior 1.0.1 release. These include:
+
+* A compile-time option to align grids to the origin (0,0): Grids can now
+be aligned to origin, or to the lower-left corner of the dataset as in
+previous releases.
+
+* A compile-time option to set an upper-bound on grid size: Out-of-core
+operations have the possibility of exhausting all available disk space
+and crashing, with sufficiently high resolutions and large datasets. A
+suitable upper-limit on the number of grid points allowed in output can
+provide protection from this. With this option enabled, when the
+calculated grid size exceeds the pre-determined limit, Points2Grid will
+abort.
+
+* Support for libLAS 1.7+: Support for libLAS 1.7+, using the libLAS C
+API, has been back-ported from the CRREL fork of Points2Grid. Support for
+libLAS 1.2.1 and earlier through the native C++ API continues to be
+available as a compile-time option.
+
+Version 1.0.1:
+
+Version 1.0.1 of Points2Grid is a minor release, adding to the prior 1.0 release. 
+Through the 1.0.1 release, Points2Grid is now available under an updated 4-clause BSD 
+license.
+
+Version 1.0:
+
+* Input point clouds in ASCII and LAS formats
+* Outputs in Arc ASCII and GRD ASCII formats
+* DEM products including min, max, mean, and idw values
+* Point count values for every grid cell
+* Configurable search radius and grid resolution
+* Null filling, using a configurable moving window, to fill cells that have
+  null values

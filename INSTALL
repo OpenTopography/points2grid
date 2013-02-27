@@ -1,0 +1,34 @@
+PREREQUISITES
+-------------
+Points2Grid requires the following to be installed -
+
+1) curl: Please install libcurl from http://curl.haxx.se/. Points2Grid has
+been tested to work with version 7.20.0 of libcurl.
+
+2) liblas: Please install liblas from http://liblas.org. Points2Grid has
+been tested to work with version 1.2.1 and 1.7+ of liblas.
+
+3)gcc version 3.X. This Makefile doesn't work with GCC4.
+
+CONFIGURATION
+-------------
+Please adjust the MEM_LIMIT variable in the Interpolation.h file to reflect
+the memory limitations of your system. As a rule of thumb, set the
+MEM_LIMIT to be (available memory in bytes)/55. For jobs that generate
+grids cells greater than the MEM_LIMIT, points2grid goes "out-of-core",
+resulting in significantly worse performance. Set the upper-bound on grid size in the MAKEFILE and modify the Makefile to point to your installation.
+
+COMPILATION
+-----------
+
+If you have installed curl and liblas at non-standard locations, please set
+your CPLUS_INCLUDE_PATH and LIBRARY_PATH to respectively point to the
+locations of the include files and libraries of the installed software
+pre-requisites.
+
+If you are on a Mac (OSX), edit the Makefile to uncomment the Mac-specific
+CFLAGS setting. If you are on Solaris or Linux, there is no need to update
+the Makefile.
+
+To compile points2grid, simply use the Makefile by typing "make". The
+Makefile has been confirmed to work with gcc3 on Linux, Solaris and OSX. 

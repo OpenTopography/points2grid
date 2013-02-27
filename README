@@ -1,43 +1,81 @@
-Points2Grid software (Version 1.0.2 release)
+Points2Grid
+------------
 
 Proven through thousands of jobs run via the OpenTopography Facility
-(http://www.opentopography.org), Points2Grid is a robust and scalable tool
-for gridding LIDAR point cloud data to generate Digital Elevation Models
-(DEM). Points2Grid uses a local gridding method to compute grid cell
-elevation using a neighborhood defined around each cell based on a search
-radius provided by the user. The local gridding approach employed by
+(http://www.opentopography.org), Points2Grid is a robust and scalable tool 
+that generates Digital Elevation Models (DEM) using a local gridding
+method. The local gridding algorithm computes grid cell elevation using a
+circular neighbourhood defined around each grid cell based on a radius
+provided by the user. This neighbourhood is referred to as a bin, while the
+grid cell is referred to as a DEM node. Up to four values — minimum,
+maximum, mean, or inverse distance weighted (IDW) mean — are computed for
+points that fall within the bin. These values are then assigned to the
+corresponding DEM node and used to represent the elevation variation over
+the neighbourhood represented by the bin. If no points are found within a
+given bin, the DEM node receives a value of null. The Points2Grid service
+also provides a null filing option, which applies an inverse distance
+weighted focal mean via a square moving window of 3, 5, or 7 pixels to fill
+cells in the DEM that have null values.
+The local gridding approach employed by
 Points2Grid is most effective in situations where LIDAR shot densities
 exceed the resolution of the grid to be produced from these data.
-
-Version 1.0.2 of Points2Grid is a minor release, adding several small
-features to the prior 1.0.1 release. These include:
-
-* A compile-time option to align grids to the origin (0,0): Grids can now
-be aligned to origin, or to the lower-left corner of the dataset as in
-previous releases.
-
-* A compile-time option to set an upper-bound on grid size: Out-of-core
-operations have the possibility of exhausting all available disk space
-and crashing, with sufficiently high resolutions and large datasets. A
-suitable upper-limit on the number of grid points allowed in output can
-provide protection from this. With this option enabled, when the
-calculated grid size exceeds the pre-determined limit, Points2Grid will
-abort.
-
-* Support for libLAS 1.7+: Support for libLAS 1.7+, using the libLAS C
-API, has been back-ported from the CRREL fork of Points2Grid. Support for
-libLAS 1.2.1 and earlier through the native C++ API continues to be
-available as a compile-time option.
-
 Please direct all feedback to info@opentopography.org 
 
 
-Features in the previous version 1.0 of Points2Grid:
+INSTALLATION
+------------
+Please read the INSTALL file for details on the installation process.
 
-* Input point clouds in ASCII and LAS formats
-* Outputs in Arc ASCII and GRD ASCII formats
-* DEM products including min, max, mean, and idw values
-* Point count values for every grid cell
-* Configurable search radius and grid resolution
-* Null filling, using a configurable moving window, to fill cells that have
-  null values
+USE
+---
+If your pre-requisites (curl and liblas) are installed on non-standard
+location, please set your LD_LIBRARY_PATH accordingly. To run complete
+usage information, please type "points2grid" from the command-line. The
+command-line options are as follows:
+
+% ./points2grid [-i <data_file_name> | -l <data_file_url>] -o
+  <output_file_name> [--input_format=ascii|las] [--all] [--min] [--max]
+  [--mean] [--idw] [--den] [--fill|--fill_window_size=<value>] [-r
+  <search_radius>] [--output_format=all|arc|grid]
+  [--resolution=<value>|--resolution-x=<value>|--resolution-y=<value>]
+
+1. -i <data_file_name> | -l <data_file_url>:
+	- must be unzipped plain text file
+
+2. -o <output_file_name>: 
+	- without extension, i.e. if you want the output file to be
+	test.asc, this parameter shoud be "test"
+
+3. Output Type: 
+	--min: the Zmin values are stored
+	--max: the Zmax values are stored
+	--mean: the Zmean values are stored
+	--idw: the Zidw values are stored
+	--den: the density values are stored
+	--all (default): all the values are stored
+
+4. -r <search radius>
+	- specifies the search radius. The default value is square root 2
+	of horizontal distance in a grid cell 
+
+5. --input_format: 
+        - 'ascii' expects input point cloud in ASCII format (default)
+        - 'las' expects input point cloud in LAS format
+
+6. --output_format: 
+	- 'all' generates every possible format, 
+	- 'arc' for ArcGIS format, 
+	- 'grid' for Ascii GRID format, 
+	- the default value is --all
+
+7. Resolution
+	- --resolution=<value>: The resolution is set to the specified
+	  value. Use square grids.
+	- --resolution-x=<value> --resolution-y=<value>: Each parameter
+	  specifies each side of grid cells. 
+	- If not specified, default values (6ft) are used.
+
+8. Null Filling
+        --fill: fills nulls in the DEM. Default window size is 3.
+        --fill_window_size=<value>: The fill window is set to value.
+	  Permissible values are 3, 5 and 7.
