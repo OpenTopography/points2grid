@@ -1,0 +1,7 @@
+Make sure that you have gcc version 3.X. This Makefile doesn't work with
+GCC4. I also had to comment out the "ctags" target for the Makefile to
+work. To compile, simply type "make" from the command-line.
+
+As a prerequisite, you need to install libcurl from: http://curl.haxx.se/,
+and liblas from: http://liblas.org. Be sure to modify the Makefile to point
+to your installation.
