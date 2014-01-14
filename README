@@ -33,7 +33,7 @@ location, please set your LD_LIBRARY_PATH accordingly. To run complete
 usage information, please type "points2grid" from the command-line. The
 command-line options are as follows:
 
-% ./points2grid [-i <data_file_name> | -l <data_file_url>] -o
+% ./interp [-i <data_file_name> | -l <data_file_url>] -o
   <output_file_name> [--input_format=ascii|las] [--all] [--min] [--max]
   [--mean] [--idw] [--den] [--fill|--fill_window_size=<value>] [-r
   <search_radius>] [--output_format=all|arc|grid]
