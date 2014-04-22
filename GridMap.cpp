@@ -121,13 +121,5 @@ void GridMap::setId(int _id)
 {
     id = _id;
 }
-/*
-void GridMap::setGridFile(string fname)
-{
-    if(gridFile != NULL)
-	delete gridFile;
 
-    gridFile = new GridFile(id, fname, _size_x, _overlap_upper_bound - _overlap_lower_bound + 1);
-}
-*/
 

@@ -101,16 +101,9 @@ class Interpolation
 
 	static const int MAX_POINT_SIZE = 16000000;
 	static const double WEIGHTER = 2.0;
-	//static const unsigned int MEM_LIMIT = 31000000;
-	//static const unsigned int MEM_LIMIT = 600000000;
-	//static const unsigned int MEM_LIMIT = 120000000;
-	// static const unsigned int MEM_LIMIT =     100000;
 	static const unsigned int MEM_LIMIT = 200000000;
 
     private:
-	//double arrX[MAX_POINT_SIZE];
-	//double arrY[MAX_POINT_SIZE];
-	//double arrZ[MAX_POINT_SIZE];
 
 	double min_x;
 	double min_y;

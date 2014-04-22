@@ -65,8 +65,6 @@ GridFile::GridFile(int id, char *_fname, int _size_x, int _size_y)
     size_y = _size_y;
     inMemory = false;
 
-    // for each file, you have to initialize every points
-    // then map.initialized = true;
     if((fp = fopen64(fname, "w+")) == NULL)
     {
 	fprintf(stderr, "%s fopen error %d(%s) \n", fname, errno, strerror(errno));
@@ -80,14 +78,6 @@ GridFile::GridFile(int id, char *_fname, int _size_x, int _size_y)
     cout << id << ". file size: " << n * sizeof(GridPoint) << endl;
     fclose(fp);
 
-    /*
-    if((filedes = open(fname, O_RDWR)) < 0)
-    {
-	fprintf(stderr, "%s open error %d(%s)\n", fname, errno, strerror(errno));
-    }
-    */
-
-    //cout << "file initialized: " << ID << endl;
 }
 
 GridFile::~GridFile()
@@ -102,8 +92,6 @@ GridFile::~GridFile()
 	close(filedes);
 
     unlink(fname);
-
-    //cout << "file closed: " << ID << endl;
 }
 
 int GridFile::getId()
@@ -114,7 +102,6 @@ int GridFile::getId()
 // memory map
 int GridFile::map()
 {
-    //filedes = fileno(fp);
     if((filedes = open(fname, O_RDWR)) < 0)
     {
 	fprintf(stderr, "%s open error %d(%s)\n", fname, errno, strerror(errno));
@@ -128,21 +115,11 @@ int GridFile::map()
     inMemory = true;
 
     return 0;
-
-    //cout << "map size: " << sizeof(GridPoint) * size_x * size_y << endl;
-    //cout << "sizeof(GridPoint): " << sizeof(GridPoint) << endl;
-    //cout << "mmaped: " << ID << endl;
 }
 
 int GridFile::unmap()
 {
     int rc;
-
-    // have to delete previous information??
-    // have to overwrite
-
-    // we can track the changes but that scheme requires memory usage.
-    // But our main goal is to fully utilize memory. 
     
     if(interp != NULL)
     {
@@ -159,7 +136,6 @@ int GridFile::unmap()
 	close(filedes);
 	filedes = -1;
 
-	//cout << "unmapped: " << ID << endl;
     }
 
     return 0;

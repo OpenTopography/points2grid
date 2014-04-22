@@ -97,9 +97,6 @@ Interpolation::~Interpolation()
 	
 int Interpolation::init(char *inputName, int inputFormat)
 {
-    //unsigned int i;
-
-    //struct tms tbuf;
     clock_t t0, t1;
 
 
@@ -111,7 +108,6 @@ int Interpolation::init(char *inputName, int inputFormat)
     // This code can be eliminated if database can provide these values
     //////////////////////////////////////////////////////////////////////
 
-    //t0 = times(&tbuf);
     t0 = clock();
 
     if(inputName == NULL)
@@ -149,41 +145,6 @@ int Interpolation::init(char *inputName, int inputFormat)
 		if(max_y < data_y) max_y = data_y;
 	  
 		data_count++;
-	  
-	  
-		/*
-		// tokenizing
-		string strLine(line);
-	  
-		// first token
-		string::size_type pos = strLine.find_first_of(",",0);
-		string::size_type lastPos = strLine.find_first_not_of(",",0);
-	  
-		string strX = strLine.substr(lastPos, pos - lastPos);
-	  
-		// second token
-		lastPos = strLine.find_first_not_of(",", pos);
-		pos = strLine.find_first_of(",", lastPos);
-	  
-		string strY = strLine.substr(lastPos, pos - lastPos);
-	  
-		// third token
-		lastPos = strLine.find_first_not_of(",", pos);
-		pos = strLine.find_first_of("\n", lastPos);
-	  
-		string strZ = strLine.substr(lastPos, pos - lastPos);
-	  
-		// data conversion
-		arrX[data_count] = atof(strX.c_str());
-		if(min_x > arrX[data_count]) min_x = arrX[data_count];
-		if(max_x < arrX[data_count]) max_x = arrX[data_count];
-	  
-		arrY[data_count] = atof(strY.c_str());
-		if(min_y > arrY[data_count]) min_y = arrY[data_count];
-		if(max_y < arrY[data_count]) max_y = arrY[data_count];
-	  
-		arrZ[data_count++] = atof(strZ.c_str());
-		*/
 	    }
       
 	fclose(fp);
@@ -236,12 +197,9 @@ int Interpolation::init(char *inputName, int inputFormat)
     }
 
     t1 = clock();
-    //t1 = times(&tbuf);
-    //printf("Min/Max searching time: %10.2f\n", (t1 - t0)/(double) sysconf(_SC_CLK_TCK));
     printf("Min/Max searching time: %10.2f\n", (double)(t1 - t0)/CLOCKS_PER_SEC);
 
 
-    //t0 = times(&tbuf);
 
     //////////////////////////////////////////////////////////////////////
     // Intialization Step excluding min/max searching
@@ -307,8 +265,7 @@ int Interpolation::init(char *inputName, int inputFormat)
 
 
     // if the size is too big to fit in memory,
-    // then 
-    //	construct out-of-core structure
+    // then construct out-of-core structure
     if(GRID_SIZE_X * GRID_SIZE_Y > MEM_LIMIT)
 	{
 	    core_mode = OUTCORE;
@@ -340,8 +297,6 @@ int Interpolation::init(char *inputName, int inputFormat)
 	
     cout << "Interpolation::init() done successfully" << endl;
 
-    //t1 = times(&tbuf);
-    //printf("Initializing time: %10.2f\n", (t1 - t0)/(double) sysconf(_SC_CLK_TCK));
 
     return 0;
 }
@@ -357,22 +312,8 @@ int Interpolation::interpolation(char *inputName,
     double data_x, data_y;
     double data_z;
 
-    //struct tms tbuf;
-    //clock_t t0, t1;
 
     printf("Interpolation Starts\n");
-
-    //t0 = times(&tbuf);
-
-    //cout << "data_count: " << data_count << endl;
-
-    /*
-      if((rc = interp->init()) < 0)
-      {
-      cout << "inter->init() error" << endl;
-      return -1;
-      }
-    */
 
     if (inputFormat == INPUT_ASCII) {
 	FILE *fp;
@@ -468,8 +409,6 @@ int Interpolation::interpolation(char *inputName,
 
     cout << "Interpolation::interpolation() done successfully" << endl;
 
-    //t1 = times(&tbuf);
-    //printf("Interpolation + Output time: %10.2f\n", (t1 - t0)/(double) sysconf(_SC_CLK_TCK));
 
     return 0;
 }

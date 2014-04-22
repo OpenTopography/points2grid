@@ -77,7 +77,6 @@ class GridMap
 	void setOverlapLowerBound(int _overlap_lower_bound);
 	void setOverlapUpperBound(int _overlap_upper_bound);
 	void setInitialized(bool _initialized);
-	//void setGridFile(string fname);
 
     private:
 	int lowerBound;

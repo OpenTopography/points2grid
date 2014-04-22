@@ -95,10 +95,6 @@ OutCoreInterp::OutCoreInterp(double dist_x, double dist_y,
     if(numFiles == 0)
 	cout << "The number of files is 0!" << endl;
 
-    // TODO: if one row is too long, 
-    // i.e. the shape of decomposition is long, and thin in one direction, 
-    // alternative decomposition scheme may be more efficient.
-
     // row-wise decomposition
 
     local_grid_size_x = GRID_SIZE_X;
@@ -191,24 +187,6 @@ int OutCoreInterp::init()
 
 int OutCoreInterp::update(double data_x, double data_y, double data_z)
 {
-    // update()
-    //	push the point info into an appropriate queue
-    //	if the length of the queue exceeds a limit,
-    //	then
-    //		if another file is loaded, write back (lazy update)
-    //		if the file we need has not opened,
-    //			read a file from disk
-    //		update the file (PROC1)
-
-    // 
-    // find which file should be updated
-
-    /*
-      if(data_x < 0){
-      cout << "4. !!!! " << data_x << endl;
-      return -1;
-      }
-    */
 
     int fileNum;
 
@@ -282,10 +260,7 @@ int OutCoreInterp::finish(char *outputName, int outputFormat, unsigned int outpu
 	openFile = -1;
     }
 
-    ////////////////////////////////////////////////////////////
-    // flushing
-    // can be moved inside the communications
-    for(i = 0; i < numFiles; i++)
+     for(i = 0; i < numFiles; i++)
         {
             if(qlist[i].size() != 0)
                 {
@@ -312,11 +287,9 @@ int OutCoreInterp::finish(char *outputName, int outputFormat, unsigned int outpu
                     gf = NULL;
                 }
         }
-    ////////////////////////////////////////////////////////////
 
     for(i = 0; i < numFiles - 1; i++)
         {
-            //////////////////////////////////////////////////////////////
             // read the upside overlap
 
             if((gf = gridMap[i]->getGridFile()) == NULL)
@@ -350,9 +323,6 @@ int OutCoreInterp::finish(char *outputName, int outputFormat, unsigned int outpu
 		cout << "OutCoreInterp::finish() gf->map() error" << endl;
 		return -1;
 	    }
-            //////////////////////////////////////////////////////////////
-
-            //////////////////////////////////////////////////////////////
             // update (i+1)th component
             if((gf = gridMap[i+1]->getGridFile()) == NULL)
                 {
@@ -398,12 +368,10 @@ int OutCoreInterp::finish(char *outputName, int outputFormat, unsigned int outpu
 		cout << "OutCoreInterp::finish() gf->map() error" << endl;
 		return -1;
 	    }
-            //////////////////////////////////////////////////////////////
         }
 
     for(i = numFiles -1; i > 0; i--)
         {
-            //////////////////////////////////////////////////////////////
             // read the downside overlap
 
             if((gf = gridMap[i]->getGridFile()) == NULL)
@@ -434,9 +402,6 @@ int OutCoreInterp::finish(char *outputName, int outputFormat, unsigned int outpu
 		cout << "OutCoreInterp::finish gf->map() error" << endl;
 		return -1;
 	    }
-            //////////////////////////////////////////////////////////////
-
-            //////////////////////////////////////////////////////////////
             // update (i-1)th component
             if((gf = gridMap[i-1]->getGridFile()) == NULL)
                 {
@@ -472,7 +437,6 @@ int OutCoreInterp::finish(char *outputName, int outputFormat, unsigned int outpu
                     gf = NULL;
                     openFile = -1;
                 }
-            //////////////////////////////////////////////////////////////
         }
 
     for(i = 0; i < numFiles; i++)
@@ -487,8 +451,7 @@ int OutCoreInterp::finish(char *outputName, int outputFormat, unsigned int outpu
 
 
     t0 = clock();
-    //t0 = times(&tbuf);
-
+ 
     // merge pieces into one file
     if(outputFile(outputName, outputFormat, outputType) < 0)
         {
@@ -497,7 +460,6 @@ int OutCoreInterp::finish(char *outputName, int outputFormat, unsigned int outpu
         }
 
     t1 = clock();
-    //t1 = times(&tbuf);
     printf("Output Execution time: %10.2f\n", (double)(t1 - t0)/CLOCKS_PER_SEC);
 
     return 0;
@@ -517,14 +479,8 @@ void OutCoreInterp::updateInterpArray(int fileNum, double data_x, double data_y,
     x = data_x - lower_grid_x * GRID_DIST_X;
     y = data_y - lower_grid_y * GRID_DIST_Y;
 
-
-    //if(lower_grid_y == 30 && data_y > GRID_DIST_Y * lower_grid_y)
-    //printf("(%f %f) = (%d, %d)\n", data_x, data_y, lower_grid_x, lower_grid_y);
-
     // if the opened file is not the 0th file, then you have to consider the offset of the grid of the file!!!
     lower_grid_y -= gridMap[fileNum]->getOverlapLowerBound(); // local coordinate
-
-    //cout << fileNum << ":(" << lower_grid_x << "," << lower_grid_y << ")" << endl;
 
     update_first_quadrant(fileNum, data_z, lower_grid_x + 1, lower_grid_y + 1, GRID_DIST_X -x, GRID_DIST_Y - y);
     update_second_quadrant(fileNum, data_z, lower_grid_x, lower_grid_y + 1, x, GRID_DIST_Y - y);
@@ -540,11 +496,6 @@ void OutCoreInterp::update_first_quadrant(int fileNum, double data_z, int base_x
     int i;
     int j;
     int ub = gridMap[fileNum]->getOverlapUpperBound() - gridMap[fileNum]->getOverlapLowerBound();
-    //int ub = gridMap[fileNum]->getOverlapUpperBound();
-    //cout << "fileNum: " << fileNum << " ub: " << ub << endl;
-    //double temp;
-
-    //printf("radius: %f ", radius_sqrt);
 
     for(i = base_x; i < GRID_SIZE_X; i++)
         {
@@ -599,9 +550,7 @@ void OutCoreInterp::update_second_quadrant(int fileNum, double data_z, int base_
 		    }
                 }
         }
-
 }
-
 	
 void OutCoreInterp::update_third_quadrant(int fileNum, double data_z, int base_x, int base_y, double x, double y)
 {
@@ -1088,16 +1037,3 @@ void OutCoreInterp::finalize()
     }
 }
 
-/*
-  cout << endl << "buffer p size: " << sizeof(GridPoint) * len_y * GRID_SIZE_X << endl;
-  cout << "start: " << start << " len_y: " << len_y << endl;
-
-  cout << "olb: " << gridMap[i]->getOverlapLowerBound() << " lb: " << gridMap[i]->getLowerBound() << endl;
-  cout << "oub: " << gridMap[i]->getOverlapUpperBound() << " ub: " << gridMap[i]->getUpperBound() << endl;
-  cout << "total size: " << gridMap[i]->getOverlapUpperBound() * GRID_SIZE_X + GRID_SIZE_X << endl;
-
-  cout << "memcpy size: " << sizeof(GridPoint) * len_y * (GRID_SIZE_X - 45) << endl;
-  cout << "mmap size: " << gridMap[i]->getGridFile()->getMemSize() << endl;
-  cout << "start addr: " << start * sizeof(GridPoint) << endl << endl;
-
-*/

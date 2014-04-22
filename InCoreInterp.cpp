@@ -137,7 +137,6 @@ int InCoreInterp::update(double data_x, double data_y, double data_z)
     int lower_grid_x;	
     int lower_grid_y; 
 
-    //cout << GRID_DIST_X << " " << GRID_DIST_Y;
     lower_grid_x = (int)floor((double)data_x/GRID_DIST_X);
     lower_grid_y = (int)floor((double)data_y/GRID_DIST_Y);
 
@@ -147,22 +146,15 @@ int InCoreInterp::update(double data_x, double data_y, double data_z)
 	    return 0;
 	}
 
-    //printf("lower_grid_x: %d, grid_y: %d, arrX: %.2f, arrY: %.2f\n", lower_grid_x, lower_grid_y, arrX[i], arrY[i]);
     x = (data_x - (lower_grid_x) * GRID_DIST_X);
     y = (data_y - (lower_grid_y) * GRID_DIST_Y);
 
-    //cout << "(" << data_x << " " << data_y << ")=(" << lower_grid_x << ", " << lower_grid_y << "): ";
-    //printf("(%f %f) = (%d, %d): ", data_x, data_y, lower_grid_x, lower_grid_y);
-
-    //if(lower_grid_y == 30 && data_y > GRID_DIST_Y * lower_grid_y)
-    //printf("(%f %f) = (%d, %d)\n", data_x, data_y, lower_grid_x, lower_grid_y);
 
     update_first_quadrant(data_z, lower_grid_x+1, lower_grid_y+1, GRID_DIST_X - x, GRID_DIST_Y - y);
     update_second_quadrant(data_z, lower_grid_x, lower_grid_y+1, x, GRID_DIST_Y - y);
     update_third_quadrant(data_z, lower_grid_x, lower_grid_y, x, y);
     update_fourth_quadrant(data_z, lower_grid_x+1, lower_grid_y, GRID_DIST_X - x, y);
 
-    //cout << "test" << endl;
     return 0;
 }
 
@@ -243,8 +235,7 @@ int InCoreInterp::finish(char *outputName, int outputFormat, unsigned int output
     }
 
     t0 = clock();
-    //t0 = times(&tbuf);
-
+ 
     if((rc = outputFile(outputName, outputFormat, outputType)) < 0)
 	{
 	    cout << "InCoreInterp::finish outputFile error" << endl;
@@ -303,7 +294,6 @@ void InCoreInterp::update_first_quadrant(double data_z, int base_x, int base_y, 
 		}
 	}
 
-    //cout << "test2" << endl;
 }
 
 	
@@ -516,12 +506,6 @@ int InCoreInterp::outputFile(char *outputName, int outputFormat, unsigned int ou
 	gridFiles = NULL;
     }
 
-
-    //struct tms tbuf;
-    //clock_t t0, t1;
-
-    //t0 = times(&tbuf);
-
     // print ArcGIS headers
     if(arcFiles != NULL)
 	{
@@ -700,8 +684,6 @@ int InCoreInterp::outputFile(char *outputName, int outputFormat, unsigned int ou
 		}
 	}
 
-    //t1 = times(&tbuf);
-    //printf("elapsed time: %10.10f\n", (t1 - t0)/(double) sysconf(_SC_CLK_TCK));
 
     return 0;
 }
