@@ -1,3 +1,5 @@
+[![NSF-0930731](https://img.shields.io/badge/NSF-0930731-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=0930731) 
+
 Points2Grid
 ------------
 
